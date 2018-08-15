@@ -2,12 +2,46 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Stage, Layer, Rect, Text } from 'react-konva';
 
-
 class Dino extends React.Component {
+    render() {
+        return (           
+            <Rect
+                x={this.props.x}
+                y={this.props.y}
+                width={40}
+                height={100}
+                fill='green'
+                shadowBlur={5}
+                onClick={this.props.onClick}
+            />
+        )
+    }
+}
+
+class Cactus extends React.Component {
+    render() {
+        return (           
+            <Rect
+                x={this.props.x}
+                y={this.props.y}
+                width={this.props.width}
+                height={this.props.height}
+                fill='red'
+                shadowBlur={5}
+            />
+        )
+    }
+}
+
+
+
+class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            position: 300,
+            positionCactusX: window.innerWidth,
+            positionCactusY: 260,
+            positionDinoY: 300,
             count: 0,
         }
         this.timer = setInterval(() => this.gameLoop(), 10);
@@ -16,30 +50,45 @@ class Dino extends React.Component {
     jumpClick = () => {
         this.setState(prevState => {
             return {
-                position: prevState.position - 200
+                positionDinoY: prevState.positionDinoY - 200
             }
         });
     };
 
     gameLoop() {
+
         this.setState( prevState => {
-            if (prevState.position === 100) {
+            if (prevState.positionCactusX > - 30) {
+                return {
+                    positionCactusX: prevState.positionCactusX - 1
+                }
+            }
+
+            else return{
+                positionCactusX: window.innerWidth
+            }
+        }
+
+        );
+        
+    
+
+
+        this.setState( prevState => {
+            if (prevState.positionDinoY === 100) {
                 return {
                     count: prevState.count + 1
                 }
             }
         });
-
         this.setState(prevState => {
             if (prevState.count === 100) {
-                
-                return {
-                    position: prevState.position + 200,
+                 return {
+                    positionDinoY: prevState.positionDinoY + 200,
                     count: 0
                 };
             }
         });
-
     }
 
     render() {
@@ -47,14 +96,16 @@ class Dino extends React.Component {
             <Stage width={window.innerWidth} height={window.innerHeight}>
                 <Layer>
                     <Text text = 'Hi!'/>
-                    <Rect
-                        x={50}
-                        y={this.state.position}
-                        width={40}
-                        height={100}
-                        fill='green'
-                        shadowBlur={5}
+                    <Dino
+                        x = {50}
+                        y={this.state.positionDinoY} 
                         onClick={this.jumpClick}
+                    />
+                    <Cactus 
+                        x={this.state.positionCactusX}
+                        y={this.state.positionCactusY}
+                        width={30}
+                        height={140}
                     />
                     <Rect
                         x={0}
@@ -71,5 +122,6 @@ class Dino extends React.Component {
     }
 }
 
-ReactDOM.render(<Dino />, document.getElementById('root'));
+
+ReactDOM.render(<Game />, document.getElementById('root'));
 
