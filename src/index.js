@@ -2,38 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Stage, Layer, Rect, Text } from 'react-konva';
 
-class Dino extends React.Component {
-    render() {
-        return (           
-            <Rect
-                x={this.props.x}
-                y={this.props.y}
-                width={40}
-                height={100}
-                fill='green'
-                shadowBlur={5}
-                onClick={this.props.onClick}
-            />
-        )
-    }
-}
-
-class Cactus extends React.Component {
-    render() {
-        return (           
-            <Rect
-                x={this.props.x}
-                y={this.props.y}
-                width={this.props.width}
-                height={this.props.height}
-                fill='red'
-                shadowBlur={5}
-            />
-        )
-    }
-}
-
-
+import Dino from './components/Dino';
+import Cactus from './components/Cactus';
 
 class Game extends React.Component {
     constructor(props) {
@@ -50,7 +20,8 @@ class Game extends React.Component {
     jumpClick = () => {
         this.setState(prevState => {
             return {
-                positionDinoY: prevState.positionDinoY - 200
+                positionDinoY: prevState.positionDinoY - 200,
+                clickOnDino: false
             }
         });
     };
@@ -65,22 +36,23 @@ class Game extends React.Component {
             }
 
             else return{
+
                 positionCactusX: window.innerWidth
             }
         }
 
         );
-        
-    
-
 
         this.setState( prevState => {
-            if (prevState.positionDinoY === 100) {
-                return {
-                    count: prevState.count + 1
+            
+                if (prevState.positionDinoY === 100) {
+                    return {
+                        count: prevState.count + 1
+                    }
                 }
-            }
+            
         });
+
         this.setState(prevState => {
             if (prevState.count === 100) {
                  return {
@@ -95,10 +67,11 @@ class Game extends React.Component {
         return (
             <Stage width={window.innerWidth} height={window.innerHeight}>
                 <Layer>
-                    <Text text = 'Hi!'/>
                     <Dino
                         x = {50}
                         y={this.state.positionDinoY} 
+                        height = {100}
+                        width = {40}
                         onClick={this.jumpClick}
                     />
                     <Cactus 
