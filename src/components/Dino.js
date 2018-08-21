@@ -1,5 +1,7 @@
 import React from 'react';
-import {Rect} from 'react-konva';
+import {Rect, Image} from 'react-konva';
+// import dinosaur from '../img/dinosaur'
+
 
 class Dino extends React.Component {
     render() {
@@ -9,11 +11,14 @@ class Dino extends React.Component {
                 y={this.props.y}
                 width={this.props.width}
                 height={this.props.height}
-                fill='green'
                 onClick={this.props.onClick}
+                fill='green'
             />
         )
     }
 }
+
+
+
 
 export default Dino

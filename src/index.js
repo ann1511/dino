@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Stage, Layer, Rect, Text } from 'react-konva';
+import { Stage, Layer, Rect, Text, Image } from 'react-konva';
 
 import Dino from './components/Dino';
 import Cactus from './components/Cactus';
 
 import * as constants from './constants';
+import DinoImage, {dinosaurs} from './components/DinoImage';
 
 class Game extends React.Component {
     constructor(props) {
@@ -17,7 +18,8 @@ class Game extends React.Component {
             clickOnDino: false,
         }
         this.timer = setInterval(() => this.gameLoop(), 10);
-    }
+    };
+
 
     jumpClick = () => {
         this.setState(prevState => {
