@@ -1,24 +1,24 @@
-import React from 'react';
-import {Rect, Image} from 'react-konva';
-// import dinosaur from '../img/dinosaur'
+import React, { Component } from "react";
+import {Image } from "react-konva";
 
+export class Dino extends React.Component {
 
-class Dino extends React.Component {
-    render() {
-        return (           
-            <Rect
-                x={this.props.x}
-                y={this.props.y}
-                width={this.props.width}
-                height={this.props.height}
-                onClick={this.props.onClick}
-                fill='green'
-            />
-        )
-    }
+  render() {
+    const dinoStand = new window.Image();
+    dinoStand.src = 'https://raw.githubusercontent.com/ann1511/dino/master/src/img/dinosaur.png';
+    return(
+        <Image 
+            image={dinoStand} 
+            x={this.props.x}
+            y={this.props.y}
+            width={this.props.width}
+            height={this.props.height}
+            onClick={this.props.onClick}
+        />
+        
+    );
+  } 
 }
-
-
 
 
 export default Dino

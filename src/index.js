@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Stage, Layer, Rect, Text, Image } from 'react-konva';
+import { Stage, Layer, Rect } from 'react-konva';
 
 import Dino from './components/Dino';
 import Cactus from './components/Cactus';
 
 import * as constants from './constants';
-import DinoImage, {dinosaurs} from './components/DinoImage';
+
 
 class Game extends React.Component {
     constructor(props) {
@@ -92,12 +92,20 @@ class Game extends React.Component {
         return (
             <Stage width={window.innerWidth} height={window.innerHeight}>
                 <Layer>
-                    <Dino
+                    {/* <Dino
                         x = {constants.DINO_X}
                         y={this.state.positionDinoY} 
                         height = {constants.DINO_HEIGHT}
                         width = {constants.DINO_WIDTH}
                         onClick={this.jumpClick}
+                    /> */}
+
+                    <Dino 
+                        x = {constants.DINO_X}
+                        y={this.state.positionDinoY} 
+                        height = {constants.DINO_HEIGHT}
+                        width = {constants.DINO_WIDTH}
+                        onClick={this.jumpClick}        
                     />
                     {cactuses}
                     <Rect
