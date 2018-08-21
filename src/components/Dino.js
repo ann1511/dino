@@ -10,7 +10,6 @@ class Dino extends React.Component {
                 width={this.props.width}
                 height={this.props.height}
                 fill='green'
-                shadowBlur={5}
                 onClick={this.props.onClick}
             />
         )

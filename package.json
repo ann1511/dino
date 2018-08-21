@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "konva": "^2.2.1",
+    "ramda": "^0.25.0",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-konva": "^1.7.12",

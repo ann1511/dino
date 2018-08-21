@@ -5,14 +5,16 @@ import { Stage, Layer, Rect, Text } from 'react-konva';
 import Dino from './components/Dino';
 import Cactus from './components/Cactus';
 
+import * as constants from './constants';
+
 class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            positionCactusX: window.innerWidth,
-            positionCactusY: 260,
-            positionDinoY: 300,
-            count: 0,
+            positionCactusX: [window.innerWidth, window.innerWidth + 1000],
+            positionCactusY: constants.CACTUS_YS,
+            positionDinoY: constants.DINO_Y,
+            clickOnDino: false,
         }
         this.timer = setInterval(() => this.gameLoop(), 10);
     }
@@ -20,74 +22,88 @@ class Game extends React.Component {
     jumpClick = () => {
         this.setState(prevState => {
             return {
-                positionDinoY: prevState.positionDinoY - 200,
-                clickOnDino: false
-            }
-        });
-    };
-
-    gameLoop() {
-
-        this.setState( prevState => {
-            if (prevState.positionCactusX > - 30) {
-                return {
-                    positionCactusX: prevState.positionCactusX - 1
-                }
-            }
-
-            else return{
-
-                positionCactusX: window.innerWidth
-            }
-        }
-
-        );
-
-        this.setState( prevState => {
-            
-                if (prevState.positionDinoY === 100) {
-                    return {
-                        count: prevState.count + 1
-                    }
-                }
-            
-        });
-
-        this.setState(prevState => {
-            if (prevState.count === 100) {
-                 return {
-                    positionDinoY: prevState.positionDinoY + 200,
-                    count: 0
-                };
+                clickOnDino: true
             }
         });
     }
 
+    upDino() {
+        if (this.state.clickOnDino) {
+            this.setState(prevState => {
+                return {
+                    positionDinoY: prevState.positionDinoY - constants.DINO_SPEED
+                };
+            });
+        }
+    }
+
+    downDino() {
+        this.setState (prevState => {
+            if (prevState.positionDinoY == constants.DINO_MAX_JUMP) {
+                return {
+                    clickOnDino: false
+                }
+            }
+        });
+
+        this.setState (prevState => {
+            if (!prevState.clickOnDino && prevState.positionDinoY != constants.DINO_Y) {
+                return {
+                    positionDinoY: prevState.positionDinoY + constants.DINO_SPEED
+                }
+            }
+        });
+    }
+
+    moveCactus() {
+        this.setState(prevState => {
+            const positions = prevState.positionCactusX.map(x => {
+                if (x > - constants.CACTUS_WIDTH) {
+                    return x - constants.CACTUS_SPEED;
+                } else {
+                    return window.innerWidth;
+                }
+            });
+            return { 
+                positionCactusX: positions
+            };
+        });
+    }
+
+    gameLoop() {
+        this.upDino();
+        this.downDino();
+        this.moveCactus();
+    }
+
+    
+
     render() {
+        const cactuses = this.state.positionCactusX.map(x => 
+            <Cactus
+                x={x}
+                y={constants.CACTUS_Y}
+                width={constants.CACTUS_WIDTH}
+                height={constants.CACTUS_HEIGHT}
+            />
+        );
         return (
             <Stage width={window.innerWidth} height={window.innerHeight}>
                 <Layer>
                     <Dino
-                        x = {50}
+                        x = {constants.DINO_X}
                         y={this.state.positionDinoY} 
-                        height = {100}
-                        width = {40}
+                        height = {constants.DINO_HEIGHT}
+                        width = {constants.DINO_WIDTH}
                         onClick={this.jumpClick}
                     />
-                    <Cactus 
-                        x={this.state.positionCactusX}
-                        y={this.state.positionCactusY}
-                        width={30}
-                        height={140}
-                    />
+                    {cactuses}
                     <Rect
-                        x={0}
-                        y={400}
-                        width={window.innerWidth}
-                        height={2}
+                        x={constants.LINE_X}
+                        y={constants.LINE_Y}
+                        width={constants.LINE_WIDTH}
+                        height={constants.LINE_HEIGHT}
                         fill='black'
-                        shadowBlur={5}
-                       
                     />
                 </Layer>
             </Stage>
