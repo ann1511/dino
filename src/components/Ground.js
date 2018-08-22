@@ -18,6 +18,3 @@ export class Ground extends React.Component {
     );
   } 
 }
-
-
-export default Ground

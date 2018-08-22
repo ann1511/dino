@@ -2,9 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Stage, Layer, Rect } from 'react-konva';
 
-import Dino from './components/Dino';
-import Cactus from './components/Cactus';
-import Ground from './components/Ground'
+import {Dino} from './components/Dino';
+import {Cactus} from './components/Cactus';
+import {Ground} from './components/Ground'
+import {Cloud} from './components/Cloud'
 
 import * as constants from './constants';
 
@@ -17,7 +18,7 @@ class Game extends React.Component {
             // positionCactusY: constants.CACTUS_YS,
             positionDinoY: constants.DINO_Y,
             clickOnDino: false,
-            isGameOver: false,
+            cloudX: constants.CLOUD_X
         }
         this.timer = setInterval(() => this.gameLoop(), 10);
     };
@@ -43,10 +44,10 @@ class Game extends React.Component {
 
     downDino() {
         this.setState (prevState => {
-            if (prevState.positionDinoY == constants.DINO_MAX_JUMP) {
+            if (prevState.positionDinoY < constants.DINO_MAX_JUMP) {
                 return {
                     clickOnDino: false
-                }
+                };
             }
         });
 
@@ -54,7 +55,7 @@ class Game extends React.Component {
             if (!prevState.clickOnDino && prevState.positionDinoY != constants.DINO_Y) {
                 return {
                     positionDinoY: prevState.positionDinoY + constants.DINO_SPEED
-                }
+                };
             }
         });
     }
@@ -66,24 +67,42 @@ class Game extends React.Component {
                     return x - constants.CACTUS_SPEED;
                 } else {
                     return window.innerWidth;
-                }
+                };
             });
             return { 
                 positionCactusX: positions
             };
         });
     }
-    
+
+    moveCloud() {
+        this.setState ( prevState => {
+            if (prevState.cloudX == window.innerWidth) {
+                return {
+                    cloudX: constants.CLOUD_X
+                };
+            }
+            else {
+                return {
+                    cloudX: prevState.cloudX - constants.CLOUD_SPEED
+                };
+            }
+        });
+    }
+
     gameOver() {
         let XDino = constants.DINO_WIDTH + constants.DINO_X;
         this.state.positionCactusX.map( x => {
-            if (x < constants.DINO_X + constants.DINO_WIDTH &&
+
+            if (
+                x < constants.DINO_X + constants.DINO_WIDTH &&
                 x + constants.CACTUS_WIDTH > constants.DINO_X &&
                 constants.CACTUS_Y < this.state.positionDinoY + constants.DINO_HEIGHT &&
-                constants.CACTUS_Y + constants.CACTUS_HEIGHT > this.state.positionDinoY) 
-                {
+                constants.CACTUS_Y + constants.CACTUS_HEIGHT > this.state.positionDinoY
+            )
+            {
                 clearInterval(this.timer);
-                }
+            }
         });
     }
 
@@ -92,6 +111,7 @@ class Game extends React.Component {
         this.downDino();
         this.moveCactus();
         this.gameOver();
+        this.moveCloud();
     }
 
     
@@ -113,6 +133,12 @@ class Game extends React.Component {
                         y={constants.GROUND_Y}
                         width={constants.GROUND_WIDTH}
                         height={constants.GROUND_HEIGHT}
+                    />
+                    <Cloud
+                        x={this.state.cloudX}
+                        y={constants.CLOUD_Y}
+                        width={constants.CLOUD_WIDTH}
+                        height={constants.CLOUD_HEIGHT}
                     />
                     <Dino 
                         x = {constants.DINO_X}

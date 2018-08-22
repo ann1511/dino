@@ -1,7 +1,7 @@
 import React from 'react';
 import {Rect} from 'react-konva';
 
-class Cactus extends React.Component {
+export class Cactus extends React.Component {
     render() {
         return (           
             <Rect
@@ -15,5 +15,3 @@ class Cactus extends React.Component {
         )
     }
 }
-
-export default Cactus
