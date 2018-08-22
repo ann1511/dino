@@ -13,9 +13,10 @@ class Game extends React.Component {
         super(props);
         this.state = {
             positionCactusX: [window.innerWidth, window.innerWidth + 1000],
-            positionCactusY: constants.CACTUS_YS,
+            // positionCactusY: constants.CACTUS_YS,
             positionDinoY: constants.DINO_Y,
             clickOnDino: false,
+            isGameOver: false,
         }
         this.timer = setInterval(() => this.gameLoop(), 10);
     };
@@ -72,10 +73,20 @@ class Game extends React.Component {
         });
     }
 
+    gameOver() {
+        let XDino = constants.DINO_WIDTH + constants.DINO_X;
+        this.state.positionCactusX.map( x => {
+            if (x < XDino) {
+                clearInterval(this.timer);
+            }
+        });
+    }
+
     gameLoop() {
         this.upDino();
         this.downDino();
         this.moveCactus();
+        this.gameOver();
     }
 
     
