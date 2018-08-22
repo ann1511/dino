@@ -16,8 +16,8 @@ export const DINO_WIDTH = 100;
 export const DINO_Y = GROUND_Y - DINO_HEIGHT + 50; // 300
 export const DINO_MAX_JUMP = GROUND_Y - DINO_HEIGHT - 200; // 200
 
-export const CACTUS_WIDTH = 30;
-export const CACTUS_HEIGHT = 100;
+export const CACTUS_WIDTH = 70;
+export const CACTUS_HEIGHT = 150;
 export const CACTUS_HEIGHTS = [100, 70];
 export const CACTUS_YS =  CACTUS_HEIGHTS.map(height => GROUND_Y - height);
 export const CACTUS_Y = GROUND_Y - CACTUS_HEIGHT + 40;
