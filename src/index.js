@@ -4,6 +4,7 @@ import { Stage, Layer, Rect } from 'react-konva';
 
 import Dino from './components/Dino';
 import Cactus from './components/Cactus';
+import Ground from './components/Ground'
 
 import * as constants from './constants';
 
@@ -72,13 +73,17 @@ class Game extends React.Component {
             };
         });
     }
-
+    
     gameOver() {
         let XDino = constants.DINO_WIDTH + constants.DINO_X;
         this.state.positionCactusX.map( x => {
-            if (x < XDino) {
+            if (x < constants.DINO_X + constants.DINO_WIDTH &&
+                x + constants.CACTUS_WIDTH > constants.DINO_X &&
+                constants.CACTUS_Y < this.state.positionDinoY + constants.DINO_HEIGHT &&
+                constants.CACTUS_Y + constants.CACTUS_HEIGHT > this.state.positionDinoY) 
+                {
                 clearInterval(this.timer);
-            }
+                }
         });
     }
 
@@ -103,14 +108,12 @@ class Game extends React.Component {
         return (
             <Stage width={window.innerWidth} height={window.innerHeight}>
                 <Layer>
-                    {/* <Dino
-                        x = {constants.DINO_X}
-                        y={this.state.positionDinoY} 
-                        height = {constants.DINO_HEIGHT}
-                        width = {constants.DINO_WIDTH}
-                        onClick={this.jumpClick}
-                    /> */}
-
+                    <Ground
+                        x={constants.GROUND_X}
+                        y={constants.GROUND_Y}
+                        width={constants.GROUND_WIDTH}
+                        height={constants.GROUND_HEIGHT}
+                    />
                     <Dino 
                         x = {constants.DINO_X}
                         y={this.state.positionDinoY} 
@@ -119,13 +122,6 @@ class Game extends React.Component {
                         onClick={this.jumpClick}        
                     />
                     {cactuses}
-                    <Rect
-                        x={constants.LINE_X}
-                        y={constants.LINE_Y}
-                        width={constants.LINE_WIDTH}
-                        height={constants.LINE_HEIGHT}
-                        fill='black'
-                    />
                 </Layer>
             </Stage>
         )
