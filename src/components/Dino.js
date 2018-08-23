@@ -4,11 +4,11 @@ import {Image } from "react-konva";
 export class Dino extends React.Component {
 
   render() {
-    const dinoStand = new window.Image();
-    dinoStand.src = 'https://raw.githubusercontent.com/ann1511/dino/master/src/img/dinosaur.png';
+    const dino = new window.Image();
+    dino.src = this.props.URL;
     return(
         <Image 
-            image={dinoStand} 
+            image={dino} 
             x={this.props.x}
             y={this.props.y}
             width={this.props.width}

@@ -15,11 +15,18 @@ export const DINO_HEIGHT = 100;
 export const DINO_WIDTH = 100;
 export const DINO_Y = GROUND_Y - DINO_HEIGHT + 50; // 300
 export const DINO_MAX_JUMP = GROUND_Y - DINO_HEIGHT - 200; // 200
+export const DINO_STAND = 'https://raw.githubusercontent.com/ann1511/dino/master/src/img/dinosaur.png';
+export const DINO_DIE = 'https://raw.githubusercontent.com/ann1511/dino/master/src/img/dinosaur_die.png';
+export const DINO_RIGHT = 'https://raw.githubusercontent.com/ann1511/dino/master/src/img/dinosaur_right.png';
+export const DINO_LEFT = 'https://raw.githubusercontent.com/ann1511/dino/master/src/img/dinosaur_left.png';
+
+
 
 export const CACTUS_WIDTH = 70;
-export const CACTUS_HEIGHT = 150;
-export const CACTUS_HEIGHTS = [100, 70];
-export const CACTUS_YS =  CACTUS_HEIGHTS.map(height => GROUND_Y - height);
-export const CACTUS_Y = GROUND_Y - CACTUS_HEIGHT + 40;
+export const CACTUS_BIG_HEIGHT = 150;
+export const CACTUS_SMALL_HEIGHT = 100;
+export const CACTUS_BIG_Y = GROUND_Y - CACTUS_BIG_HEIGHT + 50;
+export const CACTUS_SMALL_Y = GROUND_Y - CACTUS_SMALL_HEIGHT + 50;
 export const CACTUS_SPEED = 4;
-
+export const CACTUS_SMALL = 'https://raw.githubusercontent.com/ann1511/dino/master/src/img/smallCactus.png';
+export const CACTUS_BIG = 'https://raw.githubusercontent.com/ann1511/dino/master/src/img/bigCactus.png';
