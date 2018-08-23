@@ -156,7 +156,7 @@ class Game extends React.Component {
 
     dinoDie() {
         this.setState ( prevState => {
-            if (prevState.count < 10) {
+            if (prevState.count < 5) {
                 return {
                     dinoURL: constants.DINO_DIE,
                     count: prevState.count + 1,
