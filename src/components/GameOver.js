@@ -1,18 +1,19 @@
-import React, { Component } from "react";
+import React from "react";
 import {Image } from "react-konva";
 
-export class Cloud extends React.Component {
+export class GameOver extends React.Component {
 
   render() {
-    const cloud = new window.Image();
-    cloud.src = this.props.URL;
+    const gameOver = new window.Image();
+    gameOver.src = this.props.URL;
     return(
         <Image 
-            image={cloud} 
+            image={gameOver} 
             x={this.props.x}
             y={this.props.y}
             width={this.props.width}
             height={this.props.height}
+            // onClick={this.props.onClick}
         />
         
     );

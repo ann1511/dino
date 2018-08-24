@@ -2,10 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Stage, Layer } from 'react-konva';
 
-import {Dino} from './components/Dino';
-import {Cactus} from './components/Cactus';
-import {Ground} from './components/Ground'
-import {Cloud} from './components/Cloud'
+import { Dino } from './components/Dino';
+import { Cactus } from './components/Cactus';
+import { Ground } from './components/Ground';
+import { Cloud } from './components/Cloud';
+import { GameOver } from './components/GameOver';
 
 import * as constants from './constants';
 
@@ -35,28 +36,22 @@ class Game extends React.Component {
                     height: constants.CACTUS_SMALL_HEIGHT,
                 }
             ],
-            // positionCactusY: constants.CACTUS_YS,
             positionDinoY: constants.DINO_Y,
             dinoURL: constants.DINO_STAND,
             clickOnDino: false,
             dinoRight: true,
-            cloudX: constants.CLOUD_X,
+            cloud1X: constants.CLOUD1_X,
+            cloud2X: constants.CLOUD2_X,
+            cloudURL: constants.CLOUD_URL,
             count: 0,
+            gameOver: false,
         }
         this.timer = setInterval(() => this.gameLoop(), 10);
     };
-
-    // const checkImage = path =>
-    // new Promise(resolve => {
-    //     const img = new Image()
-    //     img.onload = () => resolve(path)
-    //     img.onerror = () => reject()
-
-    //     img.src = path
-    // });
     
     componentDidMount() {
         checkImage(constants.DINO_DIE);
+        checkImage(constants.GAME_OVER_TEXT_URL);
     }
 
     jumpClick = () => {
@@ -69,21 +64,21 @@ class Game extends React.Component {
 
     moveDino() {
         this.setState(prevState => {
-            if (prevState.dinoRight) {
+            if (prevState.dinoRight && !this.state.clickOnDino) {
                return {
                    dinoURL: constants.DINO_RIGHT,
                    dinoRight: false,
                }
             }
-            if (!prevState.dinoRight) {
+            if (!prevState.dinoRight && !this.state.clickOnDino) {
                 return {
                     dinoURL: constants.DINO_LEFT,
-                    dinoRight: true,  
+                    dinoRight: true,
                 }
             }
         });
     }
-    
+
     upDino() {
         if (this.state.clickOnDino) {
             this.setState(prevState => {
@@ -156,7 +151,7 @@ class Game extends React.Component {
 
     dinoDie() {
         this.setState ( prevState => {
-            if (prevState.count < 5) {
+            if (prevState.count < 1) {
                 return {
                     dinoURL: constants.DINO_DIE,
                     count: prevState.count + 1,
@@ -166,26 +161,28 @@ class Game extends React.Component {
                 clearInterval(this.timer);
                 return {
                     dinoURL: constants.DINO_DIE,
+                    gameOver: true,
                 }
             }
             
         });
     }
 
-    // moveCloud() {
-    //     this.setState ( prevState => {
-    //         if (prevState.cloudX == window.innerWidth) {
-    //             return {
-    //                 cloudX: constants.CLOUD_X
-    //             };
-    //         }
-    //         else {
-    //             return {
-    //                 cloudX: prevState.cloudX - constants.CLOUD_SPEED
-    //             };
-    //         }
-    //     });
-    // }
+    moveCloud() {
+        this.setState ( prevState => {
+            if (prevState.cloud1X + constants.CLOUD_WIDTH > 0){
+                return {
+                    cloud1X: prevState.cloud1X - constants.CLOUD_SPEED,
+                    cloud2X: prevState.cloud2X - constants.CLOUD_SPEED,
+                };
+            } else {
+                return {
+                    cloud1X: constants.CLOUD1_X,
+                    cloud2X: constants.CLOUD2_X,
+                }
+            }
+        });
+    }
 
     gameLoop() {
         this.moveDino();
@@ -193,7 +190,7 @@ class Game extends React.Component {
         this.downDino();
         this.moveCactus();
         this.gameOver();
-        // this.moveCloud();
+        this.moveCloud();
         
     }
 
@@ -218,7 +215,15 @@ class Game extends React.Component {
                         height={constants.GROUND_HEIGHT}
                     />
                     <Cloud
-                        x={this.state.cloudX}
+                        URL = {this.state.cloudURL}
+                        x={this.state.cloud1X}
+                        y={constants.CLOUD_Y}
+                        width={constants.CLOUD_WIDTH}
+                        height={constants.CLOUD_HEIGHT}
+                    />
+                    <Cloud
+                        URL = {this.state.cloudURL}
+                        x={this.state.cloud2X}
                         y={constants.CLOUD_Y}
                         width={constants.CLOUD_WIDTH}
                         height={constants.CLOUD_HEIGHT}
@@ -231,6 +236,16 @@ class Game extends React.Component {
                         width = {constants.DINO_WIDTH}
                         onClick={this.jumpClick}        
                     />
+                    {this.state.gameOver && 
+                        <GameOver 
+                            URL = {constants.GAME_OVER_TEXT_URL}
+                            x = {constants.GAME_OVER_TEXT_X}
+                            y={constants.GAME_OVER_TEXT_Y} 
+                            height = {constants.GAME_OVER_TEXT_HEIGHT}
+                            width = {constants.GAME_OVER_TEXT_WIDTH}
+                            // onClick={this.jumpClick}        
+                        />
+                    }
                     {cactuses}
                 </Layer>
             </Stage>
@@ -240,4 +255,3 @@ class Game extends React.Component {
 
 
 ReactDOM.render(<Game />, document.getElementById('root'));
-
