@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Stage, Layer } from 'react-konva';
+import { Stage, Layer, Text } from 'react-konva';
 
 import { Dino } from './components/Dino';
 import { Cactus } from './components/Cactus';
@@ -10,49 +10,63 @@ import { GameOver } from './components/GameOver';
 
 import * as constants from './constants';
 
-const checkImage = path =>
-    new Promise(resolve => {
-        const img = new Image()
-        img.onload = () => resolve(path)
-        img.src = path
-    });
+// const checkImage = path =>
+//     new Promise(resolve => {
+//         const img = new Image()
+//         img.onload = () => resolve(path)
+//         img.src = path
+//     });
+
+const imageGameOverText = new window.Image();
+imageGameOverText.src = constants.GAME_OVER_TEXT_URL;
+const imageGameOverButton = new window.Image();
+imageGameOverButton.src = constants.GAME_OVER_BUTTON_URL;
+const imageDinoStand = new window.Image();
+imageDinoStand.src = constants.DINO_STAND;
+const imageDinoRight = new window.Image();
+imageDinoRight.src = constants.DINO_RIGHT;
+const imageDinoLeft = new window.Image();
+imageDinoLeft.src = constants.DINO_LEFT;
+const imageDinoDie = new window.Image();
+imageDinoDie.src = constants.DINO_DIE;
+
+const newGame = {
+    cactusesInfo: [
+        {
+            x: window.innerWidth,
+            y: constants.CACTUS_BIG_Y,
+            URL: constants.CACTUS_BIG,
+            height: constants.CACTUS_BIG_HEIGHT,
+        }, 
+        {
+            x: window.innerWidth + 1000,
+            y: constants.CACTUS_SMALL_Y, 
+            URL: constants.CACTUS_SMALL,
+            height: constants.CACTUS_SMALL_HEIGHT,
+        }
+    ],
+    positionDinoY: constants.DINO_Y,
+    clickOnDino: false,
+    cloud1X: constants.CLOUD1_X,
+    cloud2X: constants.CLOUD2_X,
+    cloudURL: constants.CLOUD_URL,
+    count: 0,
+    gameOver: false,
+    imageGameOverText: imageGameOverText,
+    imageGameOverButton: imageGameOverButton,
+    imageDino: imageDinoRight,
+    dinoRight: true,
+    score: 0,
+    scoreCount: 0,
+};
 
 
 class Game extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            cactusesInfo: [
-                {
-                    x: window.innerWidth,
-                    y: constants.CACTUS_BIG_Y,
-                    URL: constants.CACTUS_BIG,
-                    height: constants.CACTUS_BIG_HEIGHT,
-                }, 
-                {
-                    x: window.innerWidth + 1000,
-                    y: constants.CACTUS_SMALL_Y, 
-                    URL: constants.CACTUS_SMALL,
-                    height: constants.CACTUS_SMALL_HEIGHT,
-                }
-            ],
-            positionDinoY: constants.DINO_Y,
-            dinoURL: constants.DINO_STAND,
-            clickOnDino: false,
-            dinoRight: true,
-            cloud1X: constants.CLOUD1_X,
-            cloud2X: constants.CLOUD2_X,
-            cloudURL: constants.CLOUD_URL,
-            count: 0,
-            gameOver: false,
-        }
-        this.timer = setInterval(() => this.gameLoop(), 10);
+        this.state = newGame;
+        this.timer = setInterval(() => this.gameLoop(), 5);
     };
-    
-    componentDidMount() {
-        checkImage(constants.DINO_DIE);
-        checkImage(constants.GAME_OVER_TEXT_URL);
-    }
 
     jumpClick = () => {
         this.setState(prevState => {
@@ -62,18 +76,30 @@ class Game extends React.Component {
         });
     }
 
+    gameOverClick = () => {
+        this.setState(newGame);
+        this.timer = setInterval(() => this.gameLoop(), 5);
+    }
+
     moveDino() {
         this.setState(prevState => {
-            if (prevState.dinoRight && !this.state.clickOnDino) {
+            if (prevState.dinoRight && !this.state.clickOnDino && this.state.count === 10) {
                return {
-                   dinoURL: constants.DINO_RIGHT,
+                   imageDino: imageDinoLeft,
                    dinoRight: false,
+                   count: 0,
                }
             }
-            if (!prevState.dinoRight && !this.state.clickOnDino) {
+            if (!prevState.dinoRight && !this.state.clickOnDino && this.state.count === 10) {
                 return {
-                    dinoURL: constants.DINO_LEFT,
+                    imageDino: imageDinoRight,
                     dinoRight: true,
+                    count: 0,
+                }
+            }
+            else {
+                return{
+                    count : prevState.count + 1,
                 }
             }
         });
@@ -84,7 +110,7 @@ class Game extends React.Component {
             this.setState(prevState => {
                 return {
                     positionDinoY: prevState.positionDinoY - constants.DINO_SPEED,
-                    dinoURL: constants.DINO_STAND,
+                    imageDino: imageDinoStand,
                 };
             });
         }
@@ -103,7 +129,8 @@ class Game extends React.Component {
             if (!prevState.clickOnDino && prevState.positionDinoY < constants.DINO_Y) {
                 return {
                     positionDinoY: prevState.positionDinoY + constants.DINO_SPEED,
-                    dinoURL: constants.DINO_STAND,
+                    imageDino: imageDinoStand,
+                    count: 5
                     
                 };
             }
@@ -112,7 +139,7 @@ class Game extends React.Component {
 
     moveCactus() {
         this.setState(prevState => {
-            const positions = prevState.cactusesInfo.map(dict => {
+            const positions = prevState.cactusesInfo.map((dict, index, array) => {
                 if (dict.x > - constants.CACTUS_WIDTH) {
                     return {
                         x: dict.x - constants.CACTUS_SPEED,
@@ -121,13 +148,19 @@ class Game extends React.Component {
                         height: dict.height,
                     }
                 } else {
+                    let newPosition = window.innerWidth + Math.random() * window.innerWidth;
+                    if ((index === 0 && (Math.abs(array[1].x - newPosition) < window.innerWidth / 4)) ||
+                        (index === 1 && (Math.abs(array[0].x - newPosition) < window.innerWidth / 4))
+                    ) {
+                        newPosition += window.innerWidth / 2;
+                    }
                     return {
-                        x: window.innerWidth,
+                        x: newPosition,
                         y: dict.y,
                         URL: dict.URL,
                         height: dict.height,
                     }
-                }
+                }  
             });
             return { 
                 cactusesInfo: positions
@@ -136,12 +169,12 @@ class Game extends React.Component {
     }
 
     gameOver() {
-        this.state.cactusesInfo.map( dict => {
+        this.state.cactusesInfo.forEach( dict => {
             if (
-                dict.x < constants.DINO_X + constants.DINO_WIDTH &&
-                dict.x + constants.CACTUS_WIDTH > constants.DINO_X &&
-                dict.y < this.state.positionDinoY + constants.DINO_HEIGHT &&
-                dict.y + dict.height > this.state.positionDinoY
+                dict.x < constants.DINO_X + constants.DINO_WIDTH - 30 &&
+                dict.x + constants.CACTUS_WIDTH - 20 > constants.DINO_X &&
+                dict.y < this.state.positionDinoY + constants.DINO_HEIGHT - 50 &&
+                dict.y + dict.height - 30 > this.state.positionDinoY
             )
             {
                 this.dinoDie ();
@@ -151,16 +184,16 @@ class Game extends React.Component {
 
     dinoDie() {
         this.setState ( prevState => {
-            if (prevState.count < 1) {
+            if (prevState.count === 0) {
                 return {
-                    dinoURL: constants.DINO_DIE,
+                    imageDino: imageDinoDie,
                     count: prevState.count + 1,
                 }
             }
             else {
                 clearInterval(this.timer);
                 return {
-                    dinoURL: constants.DINO_DIE,
+                    imageDino: imageDinoDie,
                     gameOver: true,
                 }
             }
@@ -184,6 +217,22 @@ class Game extends React.Component {
         });
     }
 
+    calcScore() {
+        this.setState( prevState =>{
+            if (prevState.scoreCount === 50){
+                return {
+                    scoreCount: 0,
+                    score: prevState.score + 1
+                }
+            }
+            else {
+                return {
+                    scoreCount: prevState.scoreCount + 1,
+                }
+            }
+        });
+    }
+
     gameLoop() {
         this.moveDino();
         this.upDino();
@@ -191,6 +240,7 @@ class Game extends React.Component {
         this.moveCactus();
         this.gameOver();
         this.moveCloud();
+        this.calcScore();
         
     }
 
@@ -229,7 +279,7 @@ class Game extends React.Component {
                         height={constants.CLOUD_HEIGHT}
                     />
                     <Dino 
-                        URL = {this.state.dinoURL}
+                        imageDino = {this.state.imageDino}
                         x = {constants.DINO_X}
                         y={this.state.positionDinoY} 
                         height = {constants.DINO_HEIGHT}
@@ -238,14 +288,17 @@ class Game extends React.Component {
                     />
                     {this.state.gameOver && 
                         <GameOver 
-                            URL = {constants.GAME_OVER_TEXT_URL}
-                            x = {constants.GAME_OVER_TEXT_X}
-                            y={constants.GAME_OVER_TEXT_Y} 
-                            height = {constants.GAME_OVER_TEXT_HEIGHT}
-                            width = {constants.GAME_OVER_TEXT_WIDTH}
-                            // onClick={this.jumpClick}        
+                            imageText={this.state.imageGameOverText}
+                            imageButton={this.state.imageGameOverButton}
+                            onClick={this.gameOverClick}  
+
                         />
                     }
+                    <Text text={'Score: ' + this.state.score.toString()}
+                            y={100}
+                            x={window.innerWidth - 300}
+                            fontSize={36}
+                    />
                     {cactuses}
                 </Layer>
             </Stage>

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import {Image } from "react-konva";
 
 export class Cactus extends React.Component {

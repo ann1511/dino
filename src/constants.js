@@ -31,8 +31,9 @@ export const CACTUS_SPEED = 4;
 export const CACTUS_SMALL = 'https://raw.githubusercontent.com/ann1511/dino/master/src/img/smallCactus.png';
 export const CACTUS_BIG = 'https://raw.githubusercontent.com/ann1511/dino/master/src/img/bigCactus.png';
 
-export const GAME_OVER_TEXT_WIDTH = 400;
-export const GAME_OVER_TEXT_X = (window.innerWidth - GAME_OVER_TEXT_WIDTH)/2;
-export const GAME_OVER_TEXT_Y = 250;
-export const GAME_OVER_TEXT_HEIGHT = 100;
+export const GAME_OVER_WIDTH = 400;
+export const GAME_OVER_X = (window.innerWidth - GAME_OVER_WIDTH)/2;
+export const GAME_OVER_Y = 250;
+export const GAME_OVER_HEIGHT = 200;
 export const GAME_OVER_TEXT_URL = 'https://raw.githubusercontent.com/ann1511/dino/master/src/img/gameOverText.png';
+export const GAME_OVER_BUTTON_URL = 'https://raw.githubusercontent.com/ann1511/dino/master/src/img/gameOverButton.png';
